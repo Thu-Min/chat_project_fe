@@ -58,10 +58,8 @@ export const login = (username: string) => async (dispatch: any) => {
     }, {
       headers: { "Content-Type": "application/json" }
     });
-    dispatch(loginSuccess(response.data));
     
-    localStorage.setItem("access_token", JSON.stringify(response.data.access));
-    localStorage.setItem("refresh_token", JSON.stringify(response.data.refresh));
+    dispatch(loginSuccess(response.data));
   } catch {
     dispatch(loginFailed("An error occurred"));
   }

@@ -2,13 +2,17 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 import { login } from "../store/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const dispatch = useDispatch<AppDispatch>();
     const [username, setUsername] = useState("");
 
+    const navigate = useNavigate();
+
     const handleLogin = () => {
-        dispatch(login(username));    
+        dispatch(login(username));
+        navigate("/");
     };
 
     return (

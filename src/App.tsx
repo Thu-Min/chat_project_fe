@@ -1,5 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom";
 import Login from "./pages/Login";
+import Chat from "./pages/Chat";
 import "./index.css";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "./store/store";
@@ -43,6 +44,7 @@ const App = () => {
       </nav>
 
       <Routes>
+        <Route path="/" element={<Chat />} />
         <Route path="/login" element={<Login />} />
       </Routes>
     </div>
