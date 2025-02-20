@@ -15,6 +15,18 @@ const initialChatListState: ChatState = {
   error: "",
 };
 
+interface ChatDetailState {
+  chatDetails: any;
+  loading?: boolean;
+  error?: string;
+}
+
+const initialChatDetailState: ChatDetailState = {
+  chatDetails: {},
+  loading: false,
+  error: "",
+};
+
 interface ChatMessageState {
   messages: any[];
   loading?: boolean;
@@ -29,7 +41,11 @@ const initialMessageState: ChatMessageState = {
 
 const chatSlice = createSlice({
   name: "chat",
-  initialState: { ...initialChatListState, ...initialMessageState },
+  initialState: {
+    ...initialChatListState,
+    ...initialMessageState,
+    ...initialChatDetailState,
+  },
   reducers: {
     fetchChatListStart: (state) => {
       state.loading = true;
@@ -45,6 +61,18 @@ const chatSlice = createSlice({
     },
     setSelectedChat: (state, action: PayloadAction<number>) => {
       state.selectedChatId = action.payload;
+    },
+    fetchChatDetailStart: (state) => {
+      state.loading = true;
+      state.error = "";
+    },
+    fetchChatDetailSuccess: (state, action: PayloadAction<any[]>) => {
+      state.loading = false;
+      state.chatDetails = action.payload;
+    },
+    fetchChatDetailFailed: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
     },
     fetchChatMessagesStart: (state) => {
       state.loading = true;
@@ -80,6 +108,27 @@ export const fetchChatList = (accessToken: string) => async (dispatch: any) => {
     dispatch(fetchChatListFailed(error.message));
   }
 };
+
+export const fetchChatDetail =
+  (accessToken: string, chatId: number) => async (dispatch: any) => {
+    dispatch(fetchChatDetailStart());
+
+    try {
+      const response = await axios.get("http://127.0.0.1:8000/api/chat_room/", {
+        params: {
+          chatroom_id: chatId,
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      dispatch(fetchChatDetailSuccess(response.data));
+    } catch {
+      dispatch(fetchChatDetailFailed("Failed to fetch messages"));
+    }
+  };
 
 export const fetchChatMessage =
   (accessToken: string, chatId: number) => async (dispatch: any) => {
@@ -134,6 +183,9 @@ export const {
   fetchChatListSuccess,
   fetchChatListFailed,
   setSelectedChat,
+  fetchChatDetailStart,
+  fetchChatDetailSuccess,
+  fetchChatDetailFailed,
   fetchChatMessagesStart,
   fetchChatMessagesSuccess,
   fetchChatMessagesFailed,
