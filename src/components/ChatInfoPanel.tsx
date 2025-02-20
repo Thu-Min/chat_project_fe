@@ -1,14 +1,11 @@
 const ChatInfoPanel = () => {
   return (
     <div className="border-l border-gray-700 bg-gray-900 h-full">
-      {/* Header */}
       <div className="p-4 border-b border-gray-700">
         <h2 className="text-lg font-semibold text-white">Chat Details</h2>
       </div>
 
-      {/* Main Content */}
       <div className="overflow-y-auto">
-        {/* Customize Chat Section */}
         <div className="p-4 border-b border-gray-700">
           <h3 className="text-sm font-semibold text-gray-400 mb-3">
             Customize Chat
@@ -23,7 +20,6 @@ const ChatInfoPanel = () => {
           </div>
         </div>
 
-        {/* Media, Files & Links */}
         <div className="p-4 border-b border-gray-700">
           <h3 className="text-sm font-semibold text-gray-400 mb-3">
             Media, Files & Links
@@ -44,7 +40,6 @@ const ChatInfoPanel = () => {
           </div>
         </div>
 
-        {/* Privacy & Support */}
         <div className="p-4 border-b border-gray-700">
           <h3 className="text-sm font-semibold text-gray-400 mb-3">
             Privacy & Support
@@ -65,28 +60,6 @@ const ChatInfoPanel = () => {
           </div>
         </div>
 
-        {/* Shared Photos */}
-        {/* <div className="p-4 border-b border-gray-700">
-          <h3 className="text-sm font-semibold text-gray-400 mb-3">
-            Shared Photos
-          </h3>
-          <div className="grid grid-cols-3 gap-2">
-            {[1, 2, 3, 4, 5, 6].map((item) => (
-              <div
-                key={item}
-                className="aspect-square bg-gray-800 rounded cursor-pointer"
-              >
-                <img
-                  src={`/api/placeholder/80/80`}
-                  alt="Shared photo"
-                  className="w-full h-full object-cover rounded"
-                />
-              </div>
-            ))}
-          </div>
-        </div> */}
-
-        {/* Quick Actions */}
         <div className="p-4">
           <div className="space-y-2">
             <button className="w-full text-red-500 hover:bg-gray-800 p-2 rounded text-left">
