@@ -57,6 +57,11 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    clearState: (state) => {
+      state.userList = [];
+      state.onlineUserList = [];
+      state.offlineUserList = [];
+    },
   },
 });
 

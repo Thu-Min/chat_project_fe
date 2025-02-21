@@ -86,8 +86,9 @@ const chatSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    addNewMessage: (state, action: PayloadAction<any[]>) => {
-      state.messages.push(action.payload);
+    clearState: (state) => {
+      state.chatList = [];
+      state.selectedChatId = null;
     },
   },
 });
@@ -136,6 +137,24 @@ export const fetchChatMessage = (chatId: number) => async (dispatch: any) => {
   }
 };
 
+export const createChat =
+  (type: string, members: { id: number }[]) =>
+  async (dispatch: any, getState: any) => {
+    try {
+      const response = await api.post("/create_chat_room/", {
+        type: type,
+        members: members,
+      });
+
+      if (response.data) {
+        const currentChatList = getState().chat.chatList;
+        dispatch(fetchChatListSuccess([...currentChatList, response.data]));
+      }
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
 export const sendMessage =
   (chatId: number, content: string) => async (dispatch: any, getState: any) => {
     try {
@@ -167,6 +186,5 @@ export const {
   fetchChatMessagesStart,
   fetchChatMessagesSuccess,
   fetchChatMessagesFailed,
-  addNewMessage,
 } = chatSlice.actions;
 export default chatSlice.reducer;

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { authAPI } from "../../api/auth";
 import { setAuthToken } from "../../api/axios";
+import { persistStore } from "redux-persist";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -57,6 +58,7 @@ const authSlice = createSlice({
 
 export const login = (username: string) => async (dispatch: any) => {
   dispatch(loginStart());
+
   try {
     const response = await authAPI.login(username);
     dispatch(loginSuccess(response.data));
@@ -66,13 +68,25 @@ export const login = (username: string) => async (dispatch: any) => {
 };
 
 export const logout =
-  (refreshToken: string, accessToken: string) => async (dispatch: any) => {
+  (refreshToken: string, accessToken: string) =>
+  async (dispatch: any, getState: any) => {
     dispatch(logoutStart());
+
     try {
       await authAPI.logout(refreshToken, accessToken);
+
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+
       dispatch(logoutSuccess());
-    } catch {
-      dispatch(logoutFailed("An error occurred"));
+      dispatch({ type: "auth/clearState" });
+      dispatch({ type: "chat/clearState" });
+      dispatch({ type: "user/clearState" });
+
+      const persistor = persistStore(getState);
+      persistor.purge();
+    } catch (error: any) {
+      dispatch(logoutFailed(error?.message || "An error occurred"));
     }
   };
 

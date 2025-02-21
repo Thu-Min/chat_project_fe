@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import Inbox from "./Inbox";
-import Communitiy from "./Community";
+import Community from "./Community";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { fetchAllUserList } from "../store/slices/userSlice";
+import { createChat } from "../store/slices/chatSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/store";
 
@@ -17,8 +18,16 @@ const ChatList = () => {
   const users = useSelector((state: RootState) => state.user.userList);
 
   useEffect(() => {
-    dispatch(fetchAllUserList);
+    dispatch(fetchAllUserList());
   }, [dispatch]);
+
+  const handleCreateChat = async (userId: any) => {
+    try {
+      await dispatch(createChat("private", [{ id: userId }]));
+    } catch (error) {
+      console.error("Failed to create new chat", error);
+    }
+  };
 
   return (
     <div className="bg-gray-900 text-white p-4 max-w-md overflow-y-auto h-full">
@@ -41,14 +50,14 @@ const ChatList = () => {
                 <li
                   key={user.id}
                   className="p-2 hover:bg-gray-700 cursor-pointer"
-                  onClick={() => console.log(user.id)}
+                  onClick={() => handleCreateChat(user.id)}
                 >
-                  {user.name}
+                  {user.username}
                 </li>
               ))}
             </ul>
             <button
-              className="mt-4 bg-red-600 px-4 py-2 rounded-full text-white"
+              className="mt-4 bg-red-600 px-4 py-2 rounded-full text-white cursor-pointer"
               onClick={() => setShowModal(false)}
             >
               Close
@@ -92,7 +101,7 @@ const ChatList = () => {
       </div>
 
       {/* Render content based on active tab */}
-      {activeTab === "inbox" ? <Inbox /> : <Communitiy />}
+      {activeTab === "inbox" ? <Inbox /> : <Community />}
     </div>
   );
 };
