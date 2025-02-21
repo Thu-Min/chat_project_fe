@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../../api/axios";
 
 interface UserListState {
+  userList: any[];
   onlineUserList: any[];
   offlineUserList: any[];
   loading?: boolean;
@@ -9,6 +10,7 @@ interface UserListState {
 }
 
 const initialState: UserListState = {
+  userList: [],
   onlineUserList: [],
   offlineUserList: [],
   loading: false,
@@ -43,50 +45,56 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    fetchAllUserListStart: (state) => {
+      state.loading = true;
+      state.error = "";
+    },
+    fetchAllUserListSuccess: (state, action: PayloadAction<any[]>) => {
+      state.loading = false;
+      state.userList = action.payload;
+    },
+    fetchAllUserListFailed: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
-export const fetchOnlineUserList =
-  (accessToken: string) => async (dispatch: any) => {
-    dispatch(fetchOnlineUserListStart());
+export const fetchOnlineUserList = () => async (dispatch: any) => {
+  dispatch(fetchOnlineUserListStart());
 
-    try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/api/online_users/",
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  try {
+    const response = await api.get("/online_users/");
 
-      dispatch(fetchOnlineUserListSuccess(response.data));
-    } catch (error: any) {
-      dispatch(fetchOnlineUserListFailed(error.message));
-    }
-  };
+    dispatch(fetchOnlineUserListSuccess(response.data));
+  } catch (error: any) {
+    dispatch(fetchOnlineUserListFailed(error.message));
+  }
+};
 
-export const fetchOfflineUserList =
-  (accessToken: string) => async (dispatch: any) => {
-    dispatch(fetchOfflineUserListStart());
+export const fetchOfflineUserList = () => async (dispatch: any) => {
+  dispatch(fetchOfflineUserListStart());
 
-    try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/api/offline_users",
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  try {
+    const response = await api.get("/offline_users/");
 
-      dispatch(fetchOfflineUserListSuccess(response.data));
-    } catch (error: any) {
-      dispatch(fetchOfflineUserListFailed(error.message));
-    }
-  };
+    dispatch(fetchOfflineUserListSuccess(response.data));
+  } catch (error: any) {
+    dispatch(fetchOfflineUserListFailed(error.message));
+  }
+};
+
+export const fetchAllUserList = () => async (dispatch: any) => {
+  dispatch(fetchAllUserListStart());
+
+  try {
+    const response = await api.get("/users/");
+
+    dispatch(fetchAllUserListSuccess(response.data));
+  } catch (error: any) {
+    dispatch(fetchAllUserListFailed(error.message));
+  }
+};
 
 export const {
   fetchOnlineUserListStart,
@@ -95,5 +103,8 @@ export const {
   fetchOfflineUserListStart,
   fetchOfflineUserListSuccess,
   fetchOfflineUserListFailed,
+  fetchAllUserListStart,
+  fetchAllUserListSuccess,
+  fetchAllUserListFailed,
 } = userSlice.actions;
 export default userSlice.reducer;

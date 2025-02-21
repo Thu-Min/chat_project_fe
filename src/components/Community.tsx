@@ -16,15 +16,14 @@ const Community = () => {
   const offlineUserList = useSelector(
     (state: RootState) => state.user.offlineUserList
   );
-  const accessToken = useSelector((state: RootState) => state.auth.user.access);
 
   useEffect(() => {
-    dispatch(fetchOnlineUserList(accessToken));
-  }, [dispatch, accessToken]);
+    dispatch(fetchOnlineUserList());
+  }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchOfflineUserList(accessToken));
-  }, [dispatch, accessToken]);
+    dispatch(fetchOfflineUserList());
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col space-y-6 p-4">
