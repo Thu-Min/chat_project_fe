@@ -41,6 +41,9 @@ const Login = () => {
         >
           Login
         </button>
+        <span className="text-xs text-red-500 text-center">
+          You can add username and login even if you don't have account.
+        </span>
       </form>
     </div>
   );
