@@ -98,10 +98,13 @@ export const fetchChatList = () => async (dispatch: any) => {
 
   try {
     const response = await api.get("/chat_rooms/");
-
     dispatch(fetchChatListSuccess(response.data));
   } catch (error: any) {
-    dispatch(fetchChatListFailed(error.message));
+    try {
+      dispatch(fetchChatListFailed(error.message));
+    } catch (innerError: any) {
+      console.error("Error dispatching fetchChatListFailed:", innerError);
+    }
   }
 };
 
@@ -114,13 +117,16 @@ export const fetchChatDetail = (chatId: number) => async (dispatch: any) => {
         chatroom_id: chatId,
       },
     });
-
     dispatch(fetchChatDetailSuccess(response.data));
   } catch (error: any) {
     console.log("Fetch chat detail error:", error);
-    dispatch(
-      fetchChatDetailFailed(error.message || "Failed to fetch chat details")
-    );
+    try {
+      dispatch(
+        fetchChatDetailFailed(error.message || "Failed to fetch chat details")
+      );
+    } catch (innerError: any) {
+      console.error("Error dispatching fetchChatDetailFailed:", innerError);
+    }
   }
 };
 
@@ -133,13 +139,16 @@ export const fetchChatMessage = (chatId: number) => async (dispatch: any) => {
         chatroom_id: chatId,
       },
     });
-
     dispatch(fetchChatMessagesSuccess(response.data));
   } catch (error: any) {
     console.log("Fetch chat messages error:", error);
-    dispatch(
-      fetchChatMessagesFailed(error.message || "Failed to fetch messages")
-    );
+    try {
+      dispatch(
+        fetchChatMessagesFailed(error.message || "Failed to fetch messages")
+      );
+    } catch (innerError: any) {
+      console.error("Error dispatching fetchChatMessagesFailed:", innerError);
+    }
   }
 };
 

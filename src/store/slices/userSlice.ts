@@ -70,10 +70,13 @@ export const fetchOnlineUserList = () => async (dispatch: any) => {
 
   try {
     const response = await api.get("/online_users/");
-
     dispatch(fetchOnlineUserListSuccess(response.data));
   } catch (error: any) {
-    dispatch(fetchOnlineUserListFailed(error.message));
+    if (error.response) {
+      dispatch(fetchOnlineUserListFailed(error.response.data.message));
+    } else {
+      dispatch(fetchOnlineUserListFailed(error.message));
+    }
   }
 };
 
@@ -82,10 +85,13 @@ export const fetchOfflineUserList = () => async (dispatch: any) => {
 
   try {
     const response = await api.get("/offline_users/");
-
     dispatch(fetchOfflineUserListSuccess(response.data));
   } catch (error: any) {
-    dispatch(fetchOfflineUserListFailed(error.message));
+    if (error.response) {
+      dispatch(fetchOfflineUserListFailed(error.response.data.message));
+    } else {
+      dispatch(fetchOfflineUserListFailed(error.message));
+    }
   }
 };
 
@@ -94,10 +100,13 @@ export const fetchAllUserList = () => async (dispatch: any) => {
 
   try {
     const response = await api.get("/users/");
-
     dispatch(fetchAllUserListSuccess(response.data));
   } catch (error: any) {
-    dispatch(fetchAllUserListFailed(error.message));
+    if (error.response) {
+      dispatch(fetchAllUserListFailed(error.response.data.message));
+    } else {
+      dispatch(fetchAllUserListFailed(error.message));
+    }
   }
 };
 
