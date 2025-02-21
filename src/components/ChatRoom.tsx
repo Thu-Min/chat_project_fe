@@ -31,36 +31,51 @@ const ChatRoom = () => {
   }, [messages]);
 
   useEffect(() => {
-    dispatch(fetchChatDetail(selectedChatId));
+    try {
+      dispatch(fetchChatDetail(selectedChatId));
+    } catch (error) {
+      alert("Failed to fetch chat details");
+      console.error(error);
+    }
   }, [dispatch, selectedChatId]);
 
   useEffect(() => {
-    dispatch(fetchChatMessage(selectedChatId));
+    try {
+      dispatch(fetchChatMessage(selectedChatId));
+    } catch (error) {
+      alert("Failed to fetch chat messages");
+      console.error(error);
+    }
   }, [dispatch, selectedChatId]);
 
   useEffect(() => {
     if (!selectedChatId) return;
 
-    ws.current = new WebSocket(
-      `ws://127.0.0.1:8000/ws/chat/${selectedChatId}/`
-    );
+    try {
+      ws.current = new WebSocket(
+        `ws://127.0.0.1:8000/ws/chat/${selectedChatId}/`
+      );
 
-    ws.current.onopen = () => {
-      console.log("Connected to WebSocket server");
-    };
+      ws.current.onopen = () => {
+        console.log("Connected to WebSocket server");
+      };
 
-    ws.current.onmessage = (event) => {
-      const newMessage = JSON.parse(event.data);
-      dispatch(fetchChatMessagesSuccess([...messages, newMessage]));
-    };
+      ws.current.onmessage = (event) => {
+        const newMessage = JSON.parse(event.data);
+        dispatch(fetchChatMessagesSuccess([...messages, newMessage]));
+      };
 
-    ws.current.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
+      ws.current.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
 
-    ws.current.onclose = () => {
-      console.log("Disconnected from WebSocket server");
-    };
+      ws.current.onclose = () => {
+        console.log("Disconnected from WebSocket server");
+      };
+    } catch (error) {
+      alert("Failed to connect to WebSocket server");
+      console.error(error);
+    }
 
     return () => {
       if (ws.current) {
@@ -70,18 +85,23 @@ const ChatRoom = () => {
   }, [selectedChatId, dispatch, messages]);
 
   const handleSend = () => {
-    if (
-      ws.current &&
-      ws.current.readyState === WebSocket.OPEN &&
-      input.trim()
-    ) {
-      const messageData = JSON.stringify({
-        sender_id: user.user.id,
-        message: input,
-      });
+    try {
+      if (
+        ws.current &&
+        ws.current.readyState === WebSocket.OPEN &&
+        input.trim()
+      ) {
+        const messageData = JSON.stringify({
+          sender_id: user.user.id,
+          message: input,
+        });
 
-      ws.current.send(messageData);
-      setInput("");
+        ws.current.send(messageData);
+        setInput("");
+      }
+    } catch (error) {
+      alert("Failed to send message");
+      console.error(error);
     }
   };
 
@@ -102,7 +122,6 @@ const ChatRoom = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-900">
-      {/* Header */}
       <div className="flex justify-between items-center p-4 border-b border-gray-700 bg-gray-900">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
@@ -129,8 +148,6 @@ const ChatRoom = () => {
           <span className="cursor-pointer hover:text-gray-300">ℹ️</span>
         </div>
       </div>
-
-      {/* Messages Container */}
       <div className="flex-1 overflow-y-auto px-4 py-2">
         <div className="flex flex-col space-y-2">
           {messages.map((msg, index) => (
@@ -144,7 +161,6 @@ const ChatRoom = () => {
         </div>
       </div>
 
-      {/* Input Container */}
       <div className="p-4 border-t border-gray-700 bg-gray-900">
         <div className="flex space-x-2">
           <input

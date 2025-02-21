@@ -18,11 +18,25 @@ const Community = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchOnlineUserList());
+    const fetchUsers = async () => {
+      try {
+        await dispatch(fetchOnlineUserList());
+      } catch (error) {
+        alert("Failed to fetch online users");
+      }
+    };
+    fetchUsers();
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchOfflineUserList());
+    const fetchUsers = async () => {
+      try {
+        await dispatch(fetchOfflineUserList());
+      } catch (error) {
+        alert("Failed to fetch offline users");
+      }
+    };
+    fetchUsers();
   }, [dispatch]);
 
   return (

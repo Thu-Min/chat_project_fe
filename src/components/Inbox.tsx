@@ -9,8 +9,17 @@ const Inbox = () => {
   const chatList = useSelector((state: any) => state.chat.chatList);
 
   useEffect(() => {
-    dispatch(fetchChatList());
-    console.log(chatList);
+    const fetchChats = async () => {
+      try {
+        await dispatch(fetchChatList());
+        console.log(chatList);
+      } catch (error) {
+        alert("Failed to fetch chat list. Please try again later.");
+        console.error("Error fetching chat list:", error);
+      }
+    };
+
+    fetchChats();
   }, [dispatch]);
 
   const handleChatSelect = (chatId: number) => {
