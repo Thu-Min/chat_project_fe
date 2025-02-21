@@ -59,7 +59,7 @@ const chatSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    setSelectedChat: (state, action: PayloadAction<number>) => {
+    setSelectedChat: (state, action: PayloadAction<number | null>) => {
       state.selectedChatId = action.payload;
     },
     fetchChatDetailStart: (state) => {
@@ -116,8 +116,11 @@ export const fetchChatDetail = (chatId: number) => async (dispatch: any) => {
     });
 
     dispatch(fetchChatDetailSuccess(response.data));
-  } catch {
-    dispatch(fetchChatDetailFailed("Failed to fetch messages"));
+  } catch (error: any) {
+    console.log("Fetch chat detail error:", error);
+    dispatch(
+      fetchChatDetailFailed(error.message || "Failed to fetch chat details")
+    );
   }
 };
 
@@ -132,8 +135,11 @@ export const fetchChatMessage = (chatId: number) => async (dispatch: any) => {
     });
 
     dispatch(fetchChatMessagesSuccess(response.data));
-  } catch {
-    dispatch(fetchChatMessagesFailed("Failed to fetch messages"));
+  } catch (error: any) {
+    console.log("Fetch chat messages error:", error);
+    dispatch(
+      fetchChatMessagesFailed(error.message || "Failed to fetch messages")
+    );
   }
 };
 
@@ -148,7 +154,9 @@ export const createChat =
 
       if (response.data) {
         const currentChatList = getState().chat.chatList;
+        console.log(response.data);
         dispatch(fetchChatListSuccess([...currentChatList, response.data]));
+        dispatch(setSelectedChat(response.data.id));
       }
     } catch (error: any) {
       console.log(error);
@@ -158,13 +166,10 @@ export const createChat =
 export const sendMessage =
   (chatId: number, content: string) => async (dispatch: any, getState: any) => {
     try {
-      const response = await api.post(
-        "http://127.0.0.1:8000/api/send_message/",
-        {
-          chatroom_id: chatId,
-          content: content,
-        }
-      );
+      const response = await api.post("/send_message/", {
+        chatroom_id: chatId,
+        content: content,
+      });
 
       if (response.data) {
         const currentMessages = getState().chat.messages;
@@ -172,6 +177,25 @@ export const sendMessage =
       }
     } catch (error: any) {
       console.log(error);
+    }
+  };
+
+export const deleteChat =
+  (chatId: number) => async (dispatch: any, getState: any) => {
+    try {
+      await api.delete("/delete_chat_room/", {
+        data: { chatroom_id: chatId },
+      });
+
+      const currentChatList = getState().chat.chatList;
+      const updatedChatList = currentChatList.filter(
+        (chat: any) => chat.id !== chatId
+      );
+
+      dispatch(fetchChatListSuccess(updatedChatList));
+      dispatch(setSelectedChat(null));
+    } catch (error: any) {
+      console.log("Delete chat error:", error);
     }
   };
 

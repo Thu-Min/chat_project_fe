@@ -24,6 +24,7 @@ const ChatList = () => {
   const handleCreateChat = async (userId: any) => {
     try {
       await dispatch(createChat("private", [{ id: userId }]));
+      setShowModal(false);
     } catch (error) {
       console.error("Failed to create new chat", error);
     }
@@ -34,7 +35,6 @@ const ChatList = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-semibold">Chats</h1>
         <div className="flex gap-4">
-          <span className="cursor-pointer">•••</span>
           <span className="cursor-pointer" onClick={() => setShowModal(true)}>
             ↗
           </span>
@@ -42,14 +42,14 @@ const ChatList = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-gray-800 p-4 rounded-lg max-w-sm w-full">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-gray-800 p-6 rounded-lg max-w-sm w-full shadow-lg">
             <h2 className="text-lg font-semibold mb-4">Start a new chat</h2>
-            <ul className="max-h-60 overflow-y-auto">
+            <ul className="max-h-60 overflow-y-auto space-y-2">
               {users.map((user) => (
                 <li
                   key={user.id}
-                  className="p-2 hover:bg-gray-700 cursor-pointer"
+                  className="p-2 bg-gray-700 rounded-lg hover:bg-gray-600 cursor-pointer transition-colors duration-200"
                   onClick={() => handleCreateChat(user.id)}
                 >
                   {user.username}
@@ -57,7 +57,7 @@ const ChatList = () => {
               ))}
             </ul>
             <button
-              className="mt-4 bg-red-600 px-4 py-2 rounded-full text-white cursor-pointer"
+              className="mt-4 bg-red-600 px-4 py-2 rounded-full text-white cursor-pointer hover:bg-red-500 transition-colors duration-200"
               onClick={() => setShowModal(false)}
             >
               Close
@@ -65,17 +65,6 @@ const ChatList = () => {
           </div>
         </div>
       )}
-
-      <div className="bg-gray-800 rounded-full mb-4">
-        <div className="flex items-center px-4 py-2">
-          <span className="text-gray-400 mr-2">🔍</span>
-          <input
-            type="text"
-            placeholder="Search Messenger"
-            className="bg-transparent w-full outline-none text-gray-300"
-          />
-        </div>
-      </div>
 
       <div className="flex gap-2 mb-4">
         <button
