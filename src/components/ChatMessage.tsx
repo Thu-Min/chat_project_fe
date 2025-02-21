@@ -14,7 +14,7 @@ interface ChatMessageProps {
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
-  const userId = useSelector((state: RootState) => state.auth.user.user.id);
+  const userId = useSelector((state: RootState) => state.auth.user?.user?.id);
   const isCurrentUser = message.sender.id === userId;
 
   return (
