@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import api from "../../api/axios";
 
 interface ChatState {
   chatList: any[];
@@ -92,16 +92,11 @@ const chatSlice = createSlice({
   },
 });
 
-export const fetchChatList = (accessToken: string) => async (dispatch: any) => {
+export const fetchChatList = () => async (dispatch: any) => {
   dispatch(fetchChatListStart());
 
   try {
-    const response = await axios.get("http://127.0.0.1:8000/api/chat_rooms/", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await api.get("/chat_rooms/");
 
     dispatch(fetchChatListSuccess(response.data));
   } catch (error: any) {
@@ -109,63 +104,46 @@ export const fetchChatList = (accessToken: string) => async (dispatch: any) => {
   }
 };
 
-export const fetchChatDetail =
-  (accessToken: string, chatId: number) => async (dispatch: any) => {
-    dispatch(fetchChatDetailStart());
+export const fetchChatDetail = (chatId: number) => async (dispatch: any) => {
+  dispatch(fetchChatDetailStart());
 
-    try {
-      const response = await axios.get("http://127.0.0.1:8000/api/chat_room/", {
-        params: {
-          chatroom_id: chatId,
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+  try {
+    const response = await api.get("/chat_room/", {
+      params: {
+        chatroom_id: chatId,
+      },
+    });
 
-      dispatch(fetchChatDetailSuccess(response.data));
-    } catch {
-      dispatch(fetchChatDetailFailed("Failed to fetch messages"));
-    }
-  };
+    dispatch(fetchChatDetailSuccess(response.data));
+  } catch {
+    dispatch(fetchChatDetailFailed("Failed to fetch messages"));
+  }
+};
 
-export const fetchChatMessage =
-  (accessToken: string, chatId: number) => async (dispatch: any) => {
-    dispatch(fetchChatMessagesStart());
+export const fetchChatMessage = (chatId: number) => async (dispatch: any) => {
+  dispatch(fetchChatMessagesStart());
 
-    try {
-      const response = await axios.get("http://127.0.0.1:8000/api/messages", {
-        params: {
-          chatroom_id: chatId,
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
+  try {
+    const response = await api.get("/messages/", {
+      params: {
+        chatroom_id: chatId,
+      },
+    });
 
-      dispatch(fetchChatMessagesSuccess(response.data));
-    } catch {
-      dispatch(fetchChatMessagesFailed("Failed to fetch messages"));
-    }
-  };
+    dispatch(fetchChatMessagesSuccess(response.data));
+  } catch {
+    dispatch(fetchChatMessagesFailed("Failed to fetch messages"));
+  }
+};
 
 export const sendMessage =
-  (accessToken: string, chatId: number, content: string) =>
-  async (dispatch: any, getState: any) => {
+  (chatId: number, content: string) => async (dispatch: any, getState: any) => {
     try {
-      const response = await axios.post(
+      const response = await api.post(
         "http://127.0.0.1:8000/api/send_message/",
         {
           chatroom_id: chatId,
           content: content,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
         }
       );
 

@@ -7,6 +7,8 @@ import { AppDispatch } from "./store/store";
 import { logout } from "./store/slices/authSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
+import { useEffect } from "react";
+import { setAuthToken } from "./api/axios";
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,6 +23,10 @@ const App = () => {
   const handleLogout = () => {
     dispatch(logout(refreshToken, accessToken));
   };
+
+  useEffect(() => {
+    setAuthToken(accessToken);
+  });
 
   return (
     <div>

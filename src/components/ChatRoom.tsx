@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 const ChatRoom = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const accessToken = useSelector((state: RootState) => state.auth.user.access);
   const selectedChatId = useSelector(
     (state: RootState) => state.chat.selectedChatId
   );
@@ -32,11 +31,11 @@ const ChatRoom = () => {
   }, [messages]);
 
   useEffect(() => {
-    dispatch(fetchChatDetail(accessToken, selectedChatId));
+    dispatch(fetchChatDetail(selectedChatId));
   }, [dispatch, selectedChatId]);
 
   useEffect(() => {
-    dispatch(fetchChatMessage(accessToken, selectedChatId));
+    dispatch(fetchChatMessage(selectedChatId));
   }, [dispatch, selectedChatId]);
 
   useEffect(() => {
