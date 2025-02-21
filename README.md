@@ -1,50 +1,56 @@
-# React + TypeScript + Vite
+# Chat Project Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is the frontend for a chat application. It is built using modern web technologies to provide a seamless and responsive user experience.
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Architecture](#architecture)
+- [Implementation Choices](#implementation-choices)
+- [Getting Started](#getting-started)
+- [Running the Project](#running-the-project)
 
-## Expanding the ESLint configuration
+## Architecture
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+The architecture of this project follows a component-based structure using React. The main components are:
 
-- Configure the top-level `parserOptions` property like this:
+- **Main**: The root component that sets up the routing and context providers.
+- **ChatWindow**: Displays the chat messages and handles user input.
+- **MessageList**: Renders the list of messages.
+- **MessageInput**: Handles the input and submission of new messages.
+- **UserList**: Displays the list of active users.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+The state management is handled using Redux to provide a global state accessible throughout the application.
+
+## Implementation Choices
+
+- **React**: Chosen for its component-based architecture and efficient rendering.
+- **Redux**: Used for state management to provide a global state and manage complex state logic.
+- **TypeScript**: For static typing and improved developer experience.
+- **TailwindCSS**: For maintainable styles.
+
+## Getting Started
+
+To get started with the project, follow these steps:
+
+1. **Clone the repository**:
+
+```sh
+git clone https://github.com/Thu-Min/chat_project_fe.git
+cd chat_project_fe
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. **Install dependencies**:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```sh
+npm install
 ```
+
+## Running the Project
+
+To run the project locally, use the following command:
+
+```sh
+npm run dev
+```
+
+This will start the development server and open the application in your default web browser. The application will automatically reload if you make any changes to the code.
