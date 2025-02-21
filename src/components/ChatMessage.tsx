@@ -11,9 +11,10 @@ interface ChatMessageProps {
       username: string;
     };
   };
+  chatroomType: string;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ message, chatroomType }) => {
   const userId = useSelector((state: RootState) => state.auth.user?.user?.id);
   const isCurrentUser = message.sender.id === userId;
 
@@ -31,15 +32,16 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         )}
 
         <div className="flex flex-col">
+          {chatroomType === "group" && !isCurrentUser && (
+            <span className="text-xs text-gray-400 mb-1">
+              {message.sender.username}
+            </span>
+          )}
           <div
             className={`
-              px-4 py-2 rounded-2xl
-              ${
-                isCurrentUser
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-800 text-white"
-              }
-            `}
+          px-4 py-2 rounded-2xl
+          ${isCurrentUser ? "bg-blue-600 text-white" : "bg-gray-800 text-white"}
+        `}
           >
             <p className="text-sm">{message.content}</p>
           </div>

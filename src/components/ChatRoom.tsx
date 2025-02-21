@@ -134,7 +134,11 @@ const ChatRoom = () => {
       <div className="flex-1 overflow-y-auto px-4 py-2">
         <div className="flex flex-col space-y-2">
           {messages.map((msg, index) => (
-            <ChatMessage key={index} message={msg} />
+            <ChatMessage
+              key={index}
+              message={msg}
+              chatroomType={chatDetail.type}
+            />
           ))}
           <div ref={messagesEndRef} />
         </div>

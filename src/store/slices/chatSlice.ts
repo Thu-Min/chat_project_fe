@@ -199,6 +199,20 @@ export const deleteChat =
     }
   };
 
+export const addMember =
+  (chatId: number, userId: number) => async (dispatch: any) => {
+    try {
+      const response = await api.post("/add_member/", {
+        chatroom_id: chatId,
+        user_id: userId,
+      });
+
+      dispatch(fetchChatDetailSuccess(response.data));
+    } catch (error: any) {
+      console.log("Add new member error:", error);
+    }
+  };
+
 export const {
   fetchChatListStart,
   fetchChatListSuccess,
