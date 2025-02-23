@@ -11,11 +11,19 @@ const ChatInfoPanel = () => {
     (state: RootState) => state.chat.selectedChatId
   );
 
+  if (!selectedChatId) {
+    return (
+      <div className="h-screen flex items-center justify-center text-gray-500"></div>
+    );
+  }
+
   const chatDetail = useSelector((state: RootState) => state.chat.chatDetails);
   const users = useSelector((state: RootState) => state.user.userList);
 
   const nonMembers = users.filter(
-    (user) => !chatDetail.members.some((member: any) => member.id === user.id)
+    (user) =>
+      chatDetail.members &&
+      !chatDetail.members.some((member: any) => member.id === user.id)
   );
 
   const handleDelete = () => {
