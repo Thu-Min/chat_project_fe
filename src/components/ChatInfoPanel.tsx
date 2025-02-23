@@ -11,14 +11,14 @@ const ChatInfoPanel = () => {
     (state: RootState) => state.chat.selectedChatId
   );
 
+  const chatDetail = useSelector((state: RootState) => state.chat.chatDetails);
+  const users = useSelector((state: RootState) => state.user.userList);
+
   if (!selectedChatId) {
     return (
       <div className="h-screen flex items-center justify-center text-gray-500"></div>
     );
   }
-
-  const chatDetail = useSelector((state: RootState) => state.chat.chatDetails);
-  const users = useSelector((state: RootState) => state.user.userList);
 
   const nonMembers = users.filter(
     (user) =>
